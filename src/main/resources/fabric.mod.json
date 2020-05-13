@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "gud_customskins",
+  "version": "${version}",
+
+  "name": "Custom Skins",
+  "description": "Adds support to add some custom elements to Minecraft skins.",
+  "authors": [
+    "gudenau"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+  "license": "",
+  "icon": "assets/gud_customskins/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.gudenau.minecraft.customskins.CustomSkins"
+    ],
+    "client": [
+      "net.gudenau.minecraft.customskins.CustomSkins"
+    ]
+  },
+  "mixins": [
+    "gud_customskins.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.15.x"
+  },
+  "suggests": {
+  }
+}

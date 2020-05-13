@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.gudenau.minecraft.customskins.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "NativeImageMixin",
+    "PlayerEntityRendererMixin",
+    "PlayerListEntryMixin",
+    "PlayerSkinTextureMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
