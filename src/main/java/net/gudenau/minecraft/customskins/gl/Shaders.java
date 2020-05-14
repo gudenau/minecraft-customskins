@@ -3,24 +3,29 @@ package net.gudenau.minecraft.customskins.gl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.util.math.Matrix4f;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.KHRDebug;
-import org.lwjgl.system.MemoryUtil;
-import org.lwjgl.system.NativeType;
 
-import java.io.PrintStream;
+import static net.gudenau.minecraft.customskins.CustomSkins.MOD_ID;
 
 @Environment(EnvType.CLIENT)
 public class Shaders {
-    public static void loadShaders() {
-        setupLogging();
+    public static final ShaderProgram SHADER_TEST = new ShaderProgram(
+        "test", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, "projection"
+    );
+
+    public static Matrix4f PROJECTION_MATRIX = new Matrix4f();
+
+    public static void loadShaders(ResourceManager manager) {
+        SHADER_TEST.load(
+            new Shader(new Identifier(MOD_ID, "shaders/test.vert"), GL20.GL_VERTEX_SHADER, manager),
+            new Shader(new Identifier(MOD_ID, "shaders/test.frag"), GL20.GL_FRAGMENT_SHADER, manager)
+        );
     }
 
-    private static void setupLogging(){
-        GL20.glEnable(KHRDebug.GL_DEBUG_OUTPUT);
-        KHRDebug.glDebugMessageCallback((source, type, id, severity, length, message, userParam)->{
-            PrintStream stream = type == KHRDebug.GL_DEBUG_TYPE_ERROR ? System.err : System.out;
-            stream.println(MemoryUtil.memASCII(message, length));
-        }, 0);
+    public static void projectionMatrixChanged(Matrix4f projectionMatrix){
+        PROJECTION_MATRIX = projectionMatrix.copy();
     }
 }

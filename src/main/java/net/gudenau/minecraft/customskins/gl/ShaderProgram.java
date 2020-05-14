@@ -1,5 +1,6 @@
 package net.gudenau.minecraft.customskins.gl;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexFormat;
@@ -17,18 +18,20 @@ public class ShaderProgram implements AutoCloseable {
     private int program;
     private final String name;
     private final VertexFormat format;
+    private final String projectionName;
 
-    public ShaderProgram(String name, VertexFormat format){
+    public ShaderProgram(String name, VertexFormat format, String projectionName){
         this.name = name;
         this.format = format;
+        this.projectionName = projectionName;
     }
 
     @Override
-    public void close() throws Exception {
+    public void close(){
         GL20.glDeleteProgram(program);
     }
 
-    public void setupProgram(){
+    public void setupProgram(ShaderTexture[] textures){
         GL20.glUseProgram(program);
         int location = 0;
         int offset = 0;
@@ -45,9 +48,18 @@ public class ShaderProgram implements AutoCloseable {
             offset += element.getSize();
             location++;
         }
+
+        for(ShaderTexture texture : textures){
+            texture.bind();
+        }
     }
 
-    public void teardownProgram(){
+    public void teardownProgram(ShaderTexture[] textures){
+        for(ShaderTexture texture : textures){
+            texture.cleanup();
+        }
+        GlStateManager.activeTexture(GL20.GL_TEXTURE0);
+
         int location = 0;
         for(VertexFormatElement ignored : format.getElements()){
             GL20.glDisableVertexAttribArray(location);
@@ -74,6 +86,9 @@ public class ShaderProgram implements AutoCloseable {
     }
 
     public void load(Shader... shaders){
+        if(program != 0){
+            GL20.glDeleteProgram(program);
+        }
         program = GL20.glCreateProgram();
         for (Shader shader : shaders) {
             shader.attach(program);
@@ -88,8 +103,14 @@ public class ShaderProgram implements AutoCloseable {
         }
     }
 
-    private Map<String, Integer> uniforms = new HashMap<>();
+    private final Map<String, Integer> uniforms = new HashMap<>();
     public int getUniform(String name){
         return uniforms.computeIfAbsent(name, (n)->GL20.glGetUniformLocation(program, n));
+    }
+
+    public void uploadProjectionMatrix(Matrix4f projectionMatrix){
+        if(projectionName != null){
+            uploadUniform(projectionName, projectionMatrix);
+        }
     }
 }

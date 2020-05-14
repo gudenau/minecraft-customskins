@@ -59,12 +59,6 @@ public class PlayerSkinTextureHooks{
         messageDigest.update(customPayload, 0, length);
         int digest = (int)messageDigest.getValue();
 
-        try(OutputStream stream = new FileOutputStream(new File("../in.bin"))){
-            stream.write(customPayload);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         if(digest != crc32){
             System.out.println("Bad CRC");
             return;

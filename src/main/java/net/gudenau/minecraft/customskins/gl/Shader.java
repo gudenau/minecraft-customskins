@@ -2,22 +2,20 @@ package net.gudenau.minecraft.customskins.gl;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.texture.TextureUtil;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.system.MemoryUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
 
 @Environment(EnvType.CLIENT)
 public class Shader implements AutoCloseable{
     private final int shader;
 
-    public Shader(String name, int type){
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(Shader.class.getResourceAsStream("/assets/gud_customskins/shaders/" + name)))){
+    public Shader(Identifier identifier, int type, ResourceManager manager){
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(manager.getResource(identifier).getInputStream()))){
             StringBuilder builder = new StringBuilder();
             String line;
             while((line = reader.readLine()) != null){
@@ -30,10 +28,10 @@ public class Shader implements AutoCloseable{
             GL20.glCompileShader(shader);
             String log = GL20.glGetShaderInfoLog(shader);
             if(!log.isEmpty()){
-                throw new RuntimeException("Failed to load shader " + name + ": " + log);
+                throw new RuntimeException("Failed to load shader " + identifier + ": " + log);
             }
         }catch (IOException e){
-            throw new RuntimeException("Failed to read shader " + name, e);
+            throw new RuntimeException("Failed to read shader " + identifier, e);
         }
     }
 

@@ -4,10 +4,14 @@
   "package": "net.gudenau.minecraft.customskins.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "GameRendererMixin",
+    "GlDebugMixin",
+    "RenderLayerMixin"
   ],
   "client": [
     "NativeImageMixin",
     "PlayerEntityRendererMixin",
+    "PlayerEntityRendererMixinNoGenerics",
     "PlayerListEntryMixin",
     "PlayerSkinTextureMixin"
   ],
