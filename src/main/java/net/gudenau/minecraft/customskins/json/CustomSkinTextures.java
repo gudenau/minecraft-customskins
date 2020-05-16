@@ -6,7 +6,7 @@ import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public class CustomSkinTextures {
-    @Expose public Group emmisive;
+    @Expose public Group emissive;
 
     public static class Group {
         @Expose public String skin;

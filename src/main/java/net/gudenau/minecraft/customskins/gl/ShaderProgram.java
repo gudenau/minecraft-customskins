@@ -33,6 +33,7 @@ public class ShaderProgram implements AutoCloseable {
 
     public void setupProgram(ShaderTexture[] textures){
         GL20.glUseProgram(program);
+        /*
         int location = 0;
         int offset = 0;
         for(VertexFormatElement element : format.getElements()){
@@ -48,6 +49,43 @@ public class ShaderProgram implements AutoCloseable {
             offset += element.getSize();
             location++;
         }
+         */
+
+        GL20.glEnableVertexAttribArray(0);
+        GL20.glVertexAttribPointer(
+            0,
+            3, GL20.GL_FLOAT,
+            false,
+            56,
+            0
+        );
+
+        GL20.glEnableVertexAttribArray(1);
+        GL20.glVertexAttribPointer(
+            1,
+            4, GL20.GL_FLOAT,
+            false,
+            56,
+            12
+        );
+
+        GL20.glEnableVertexAttribArray(2);
+        GL20.glVertexAttribPointer(
+            2,
+            2, GL20.GL_FLOAT,
+            false,
+            56,
+            28
+        );
+
+        GL20.glEnableVertexAttribArray(3);
+        GL20.glVertexAttribPointer(
+            3,
+            2, GL20.GL_FLOAT,
+            false,
+            56,
+            44
+        );
 
         for(ShaderTexture texture : textures){
             texture.bind();
@@ -72,7 +110,7 @@ public class ShaderProgram implements AutoCloseable {
         return name;
     }
 
-    public VertexFormat getVertexFormat() {
+    public VertexFormat getMinecraftVertexFormat() {
         return format;
     }
 
@@ -83,6 +121,11 @@ public class ShaderProgram implements AutoCloseable {
             int location = getUniform(name);
             GL20.glUniformMatrix4fv(location, false, buffer);
         }
+    }
+
+    public void uploadUniform(String name, int data) {
+        int location = getUniform(name);
+        GL20.glUniform1i(location, data);
     }
 
     public void load(Shader... shaders){

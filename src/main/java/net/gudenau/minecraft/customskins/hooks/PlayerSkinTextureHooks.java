@@ -7,8 +7,10 @@ import net.fabricmc.api.Environment;
 import net.gudenau.minecraft.customskins.CustomSkins;
 import net.gudenau.minecraft.customskins.duck.NativeImageDuck;
 import net.gudenau.minecraft.customskins.duck.PlayerListEntryDuck;
+import net.gudenau.minecraft.customskins.gl.CustomTexture;
 import net.gudenau.minecraft.customskins.json.CustomSkinMetadata;
 import net.gudenau.minecraft.customskins.json.CustomSkinOverrides;
+import net.gudenau.minecraft.customskins.json.CustomSkinTextures;
 import net.gudenau.minecraft.customskins.json.Json;
 import net.gudenau.minecraft.customskins.renderer.PlayerSkinExtras;
 import net.minecraft.client.MinecraftClient;
@@ -80,6 +82,16 @@ public class PlayerSkinTextureHooks{
                 loadTexture(MinecraftProfileTexture.Type.ELYTRA, overrides.elytra, listEntry);
             }
             extras.ears = overrides.ears;
+        }
+        CustomSkinTextures textures = metadata.textures;
+        if(textures != null){
+            CustomSkinTextures.Group emissive = textures.emissive;
+            if(emissive != null){
+                extras.emissive = new PlayerSkinExtras.Textures();
+                extras.emissive.skin = CustomTexture.load(emissive.skin);
+                extras.emissive.cape = CustomTexture.load(emissive.cape);
+                extras.emissive.elytra = CustomTexture.load(emissive.elytra);
+            }
         }
     }
 

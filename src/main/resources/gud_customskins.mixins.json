@@ -4,9 +4,12 @@
   "package": "net.gudenau.minecraft.customskins.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "BufferBuilderMixin",
     "GameRendererMixin",
     "GlDebugMixin",
-    "RenderLayerMixin"
+    "LightmapTextureManagerMixin",
+    "RenderLayerMixin",
+    "VertexConsumerProvider$ImmediateMixin"
   ],
   "client": [
     "NativeImageMixin",

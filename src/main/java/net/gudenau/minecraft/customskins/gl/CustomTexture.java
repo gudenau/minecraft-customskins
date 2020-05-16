@@ -65,7 +65,7 @@ public class CustomTexture {
         return loaded;
     }
 
-    private int getGlId() {
+    public int getGlId() {
         RenderSystem.assertThread(RenderSystem::isOnRenderThreadOrInit);
         if (glId == -1) {
             glId = TextureUtil.generateTextureId();

@@ -1,7 +1,10 @@
 package net.gudenau.minecraft.customskins.gl;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.resource.ResourceManager;
@@ -15,6 +18,9 @@ public class Shaders {
     public static final ShaderProgram SHADER_TEST = new ShaderProgram(
         "test", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, "projection"
     );
+    public static final ShaderProgram EMISSIVE = new ShaderProgram(
+        "emmisive", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, "projection"
+    );
 
     public static Matrix4f PROJECTION_MATRIX = new Matrix4f();
 
@@ -23,9 +29,17 @@ public class Shaders {
             new Shader(new Identifier(MOD_ID, "shaders/test.vert"), GL20.GL_VERTEX_SHADER, manager),
             new Shader(new Identifier(MOD_ID, "shaders/test.frag"), GL20.GL_FRAGMENT_SHADER, manager)
         );
+        EMISSIVE.load(
+            new Shader(new Identifier(MOD_ID, "shaders/emissive.vert"), GL20.GL_VERTEX_SHADER, manager),
+            new Shader(new Identifier(MOD_ID, "shaders/emissive.frag"), GL20.GL_FRAGMENT_SHADER, manager)
+        );
     }
 
     public static void projectionMatrixChanged(Matrix4f projectionMatrix){
         PROJECTION_MATRIX = projectionMatrix.copy();
+    }
+
+    public static void registerBufferBuilders(Object2ObjectLinkedOpenHashMap<RenderLayer, BufferBuilder> map){
+        
     }
 }

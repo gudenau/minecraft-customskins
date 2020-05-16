@@ -20,11 +20,12 @@ import java.util.List;
 
 public class ShaderRenderLayer extends RenderLayer{
     private final ShaderProgram shader;
+    private final BufferBuilder bufferBuilder;
 
     public ShaderRenderLayer(ShaderProgram shader, ShaderTexture... textures){
         super(
             shader.getName(),
-            shader.getVertexFormat(),
+            shader.getMinecraftVertexFormat(),
             GL20.GL_QUADS,
             256,
             true,
@@ -33,6 +34,7 @@ public class ShaderRenderLayer extends RenderLayer{
             ()->shader.teardownProgram(textures)
         );
         this.shader = shader;
+        this.bufferBuilder = new ShaderBufferBuilder(shader);
     }
 
     @Override
@@ -54,6 +56,10 @@ public class ShaderRenderLayer extends RenderLayer{
                 VertexFormat vertexFormat = drawArrayParameters.getVertexFormat();
                 int count = drawArrayParameters.getCount();
 
+                GlStateManager.enableBlend();
+                GlStateManager.blendFunc(GL15.GL_SRC_ALPHA, GL15.GL_ONE_MINUS_SRC_ALPHA);
+                GlStateManager.enableDepthTest();
+
                 buffer.clear();
                 glBuffer.bind(GL15.GL_ARRAY_BUFFER);
                 glBuffer.data(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
@@ -61,6 +67,9 @@ public class ShaderRenderLayer extends RenderLayer{
                 startDrawing();
 
                 shader.uploadProjectionMatrix(Shaders.PROJECTION_MATRIX);
+                shader.uploadUniform("primaryTexture", 0);
+                shader.uploadUniform("lightmapTexture", 1);
+                shader.uploadUniform("emissiveTexture", 3);
 
                 if(count > 0){
                     vertexFormat.startDrawing(MemoryUtil.memAddress(buffer));
@@ -100,5 +109,9 @@ public class ShaderRenderLayer extends RenderLayer{
                 throw new RuntimeException("Buffer was not being used");
             }
         }
+    }
+
+    public BufferBuilder getBufferBuilder(){
+        return bufferBuilder;
     }
 }

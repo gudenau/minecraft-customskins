@@ -1,5 +1,6 @@
 package net.gudenau.minecraft.customskins.gl;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import org.lwjgl.opengl.GL15;
 
 import java.nio.ByteBuffer;
@@ -12,11 +13,11 @@ public class GlBuffer implements AutoCloseable{
     }
 
     public void bind(int target){
-        GL15.glBindBuffer(target, id);
+        GlStateManager.bindBuffers(target, id);
     }
 
     public void data(int target, ByteBuffer buffer, int usage){
-        GL15.glBufferData(target, buffer, usage);
+        GlStateManager.bufferData(target, buffer, usage);
     }
 
     @Override
